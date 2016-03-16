@@ -7,13 +7,19 @@
   <sounds name="sound"/>
   <sprites name="sprites">
     <sprite>sprites\Bill</sprite>
+    <sprite>sprites\Death_Projectile</sprite>
+    <sprite>sprites\redhealth</sprite>
+    <sprite>sprites\yellowhealth</sprite>
+    <sprite>sprites\grayhealth</sprite>
   </sprites>
   <backgrounds name="background">
-    <background>background\background0</background>
+    <background>background\UI</background>
   </backgrounds>
   <paths name="paths"/>
   <objects name="objects">
     <object>objects\pc</object>
+    <object>objects\Kill</object>
+    <object>objects\health</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0</room>
