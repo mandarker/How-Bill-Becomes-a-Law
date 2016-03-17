@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>hp = 10;
+global.death = false;
 </string>
           </argument>
         </arguments>
@@ -48,7 +49,8 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// MOVEMENT CODE
+            <string>if (!global.death){
+// MOVEMENT CODE
 var linearspeed = 10;
 
 if keyboard_check(vk_up) &amp;&amp; keyboard_check(vk_down) vspeed = 0;
@@ -75,23 +77,37 @@ else {
         hspeed = 0;
     }
 }
-
+}
+else {
+    hspeed = 0;
+    vspeed = 0;
+}
 
 // DAMAGE TAKING CODE
 if collision_rectangle(x - 8, y + 24, x + 8, y - 24, Kill, false, true) != noone {
-    instance_destroy();
     hp = 0;
+    //instance_destroy();
 }
 
 // DAMAGE UPDATE
+if (hp = 0)
+    global.death = true;
+if (hp &lt; 0)
+    hp = 0;
+
 var i;
-for (i = 0; i &lt; instance_number(health); i++;){
+var healthbars;
+for (i = instance_number(health) - 1; i &gt;= 0; i--;){
     healthbars[i] = instance_find(health, i);
-    
-}   
+}
+
+show_debug_message(string(healthbars[0]));
 
 for (i = hp; i &lt; array_length_1d(healthbars); i++;){
-    with (instance_id[healthbars[i]]) sprite_index = grayhealth;
+    var place = healthbars[i] - 100001;
+    with (instance_id[place]) {
+        sprite_index = grayhealth;
+    }
 }
 </string>
           </argument>
