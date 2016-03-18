@@ -6,7 +6,9 @@
   <NewExtensions/>
   <sounds name="sound"/>
   <sprites name="sprites">
-    <sprite>sprites\Bill</sprite>
+    <sprite>sprites\Bill_Idle</sprite>
+    <sprite>sprites\Bill_Run</sprite>
+    <sprite>sprites\Bill_Death</sprite>
     <sprite>sprites\Death_Projectile</sprite>
     <sprite>sprites\redhealth</sprite>
     <sprite>sprites\yellowhealth</sprite>
