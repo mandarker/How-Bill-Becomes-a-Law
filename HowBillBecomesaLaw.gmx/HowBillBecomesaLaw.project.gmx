@@ -13,15 +13,24 @@
     <sprite>sprites\redhealth</sprite>
     <sprite>sprites\yellowhealth</sprite>
     <sprite>sprites\grayhealth</sprite>
+    <sprite>sprites\BILL_IS_KILL</sprite>
+    <sprite>sprites\Bill_Knocked</sprite>
+    <sprite>sprites\Bill_Hurt</sprite>
+    <sprite>sprites\Bill_Tumble</sprite>
+    <sprite>sprites\Bill_Land</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\UI</background>
   </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\knockback.gml</script>
+  </scripts>
   <objects name="objects">
     <object>objects\pc</object>
     <object>objects\Kill</object>
     <object>objects\health</object>
+    <object>objects\ripmessage</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0</room>

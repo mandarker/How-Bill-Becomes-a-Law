@@ -26,6 +26,22 @@
           <argument>
             <kind>1</kind>
             <string>hp = 10;
+
+noControl = false;
+damaged = false;
+knocked = false;
+invincibility = false;
+
+staggerDistance = 64;
+
+invinStart = 0;
+invinTime = 3000000;
+
+damageStart = 0;
+damageTime = 200000;
+
+currTime = 0;
+
 global.death = false;
 </string>
           </argument>
@@ -50,71 +66,160 @@ global.death = false;
           <argument>
             <kind>1</kind>
             <string>if (!global.death){
-    // MOVEMENT CODE
-    var linearspeed = 10;
-
-    if keyboard_check(vk_up) &amp;&amp; keyboard_check(vk_down) vspeed = 0;
-    else if keyboard_check(vk_left) &amp;&amp; keyboard_check(vk_right) hspeed = 0;
-    else { 
-        if keyboard_check(vk_up) &amp;&amp; (y &gt; 700){
-            vspeed = -linearspeed;
+    if (!noControl){    
+        // MOVEMENT CODE
+        var linearspeed = 15;
+    
+        if keyboard_check(vk_up) &amp;&amp; keyboard_check(vk_down) vspeed = 0;
+        else if keyboard_check(vk_left) &amp;&amp; keyboard_check(vk_right) hspeed = 0;
+        else { 
+            if keyboard_check(vk_up) &amp;&amp; (y &gt; 700){
+                vspeed = -linearspeed;
+            }
+            else if keyboard_check(vk_down) &amp;&amp; (y &lt; 900){
+                vspeed = linearspeed;
+            }
+            else
+                vspeed = 0;
+                
+            if keyboard_check(vk_left) &amp;&amp; (x &gt; 64){
+                hspeed = -linearspeed;
+                image_xscale = -2;
+            }
+            else if keyboard_check(vk_right) &amp;&amp; (x &lt; 1300){
+                hspeed = linearspeed;
+                image_xscale = 2;
+            }
+            else{
+                hspeed = 0;
+            }
         }
-        else if keyboard_check(vk_down) &amp;&amp; (y &lt; 900){
-            vspeed = linearspeed;
-        }
+        
+        //MOVEMENT ANIMATION
+        if (hspeed != 0 || vspeed != 0)
+            sprite_index = Bill_Run;
         else
-            vspeed = 0;
+            sprite_index = Bill_Idle;
+    }
+        
+    // DAMAGE TAKING CODE
+    if (!invincibility){
+        image_alpha = 1;
+        if collision_rectangle(x - 8, y + 24, x + 8, y - 24, Kill, false, true) != noone {
+            hp = 5;
+            damaged = true;
+            invincibility = true;
+            noControl = true;
             
-        if keyboard_check(vk_left) &amp;&amp; (x &gt; 64){
-            hspeed = -linearspeed;
-            image_xscale = -2;
+            var objID = collision_rectangle(x - 8, y + 24, x + 8, y - 24, Kill, false, true);
+            
+            finalPos = 0;
+            if (objID.x &gt; x)
+                finalPos = 1;
+            
+                
+            invinStart = get_timer();
+            damageStart = get_timer();
+            //instance_destroy();
         }
-        else if keyboard_check(vk_right) &amp;&amp; (x &lt; 1300){
-            hspeed = linearspeed;
-            image_xscale = 2;
+    }
+    else {
+        if (knocked){
+        
+        }
+        else if (damaged){
+            if (currTime - damageStart &gt; damageTime){
+                damaged = false;
+                noControl = false;
+            }
+            else if (currTime - damageStart &gt; 0){
+                sprite_index = Bill_Hurt;
+                if (finalPos = 0)
+                    move_towards_point(x + 1, y, 5);
+                else
+                    move_towards_point(x - 1, y, 5);
+            }
+            
         }
         else{
-            hspeed = 0;
+            if (currTime - invinStart &gt; invinTime/1.1)
+                image_alpha = 0.5;
+            else if (currTime - invinStart &gt; invinTime/1.2)
+                image_alpha = 1.0;
+            else if (currTime - invinStart &gt; invinTime/1.3)
+                image_alpha = 0.5;
+            else if (currTime - invinStart &gt; invinTime/1.4)
+                image_alpha = 1.0;
+            else if (currTime - invinStart &gt; invinTime/1.5)
+                image_alpha = 0.5;
+            else if (currTime - invinStart &gt; invinTime/1.75)
+                image_alpha = 1.0;
+            else if (currTime - invinStart &gt; invinTime/2)
+                image_alpha = 0.5;
+            else if (currTime - invinStart &gt; invinTime/3)
+                image_alpha = 1.0;
+            else if (currTime - invinStart &gt; invinTime/5)
+                image_alpha = 0.5;
+            if (currTime - invinStart &gt; invinTime)
+                invincibility = false;
         }
     }
     
-    //MOVEMENT ANIMATION
-    if (hspeed != 0 || vspeed != 0)
-        sprite_index = Bill_Run;
-    else
-        sprite_index = Bill_Idle;
+    // DAMAGE UI UPDATE
+    if (hp = 0){
+        global.death = true;
+    }
+    if (hp &lt; 0)
+        hp = 0;
+    
+    var i;
+    var healthbars;
+    for (i = instance_number(health) - 1; i &gt;= 0; i--;){
+        healthbars[i] = instance_find(health, i);
+    }
+      
+    for (i = hp; i &lt; array_length_1d(healthbars); i++;){
+        var place = healthbars[i] - 100001;
+        with (instance_id[place]) {
+            sprite_index = grayhealth;
+        }
+    }
+        
 }
 else {
     hspeed = 0;
     vspeed = 0;
-    sprite_index = Bill_Death;
+    sprite_index = Bill_Death;   
 }
 
-// DAMAGE TAKING CODE
-if collision_rectangle(x - 8, y + 24, x + 8, y - 24, Kill, false, true) != noone {
-    hp = 0;
-    //instance_destroy();
-}
-
-// DAMAGE UPDATE
-if (hp = 0)
-    global.death = true;
-if (hp &lt; 0)
-    hp = 0;
-
-var i;
-var healthbars;
-for (i = instance_number(health) - 1; i &gt;= 0; i--;){
-    healthbars[i] = instance_find(health, i);
-}
-
-show_debug_message(string(healthbars[0]));
-
-for (i = hp; i &lt; array_length_1d(healthbars); i++;){
-    var place = healthbars[i] - 100001;
-    with (instance_id[place]) {
-        sprite_index = grayhealth;
-    }
+//GETS CURRENT TIME
+currTime = get_timer();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="7">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (sprite_index == Bill_Death){
+    image_speed = 0;
+    image_index = 29;
+    instance_create(room_width/2, room_height/2, ripmessage);    
 }
 </string>
           </argument>
